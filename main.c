@@ -27,16 +27,24 @@ void temp (int instr){
             rs1 = (instr >> 15) & 0x01f;
             imm = (instr >> 20);
             switch (funct3) {
-                case 000:
+                case 000: //LB = load byte
+                    printf("4");
                     break;
-                case 001:
+                case 001: //LH = load halfword
+                    printf("4");
                     break;
-                case 010:
+                case 010: //LW = load word
+                    printf("4");
                     break;
-                case 100:
+                case 100: //LBU = load byte unsigned
+                    printf("4");
                     break;
-                case 101:
+                case 101: //LHU = load halfword unsigned
+                    printf("4");
                     break;
+                default:
+                    printf("Funct3 %d not yet implemented", funct3);
+
             }
             break;
 
@@ -52,6 +60,35 @@ void temp (int instr){
             rs1 = (instr >> 15) & 0x01f;
             imm = (instr >> 20);
             switch (funct3) {
+                case 000: //ADDI = add immediate
+                    printf("4");
+                    break;
+                case 010: //SLTI = set less than immediate
+                    printf("4");
+                    break;
+                case 011: //SLTIU = set less than immediate unsigned
+                    printf("4");
+                    break;
+                case 100: //XORI = exclusive or immediate
+                    printf("4");
+                    break;
+                case 110: //ORI = or immediate
+                    printf("4");
+                    break;
+                case 111: //ANDI = and immediate
+                    printf("4");
+                    break;
+                case 001: //SLLI = shift left logical immediate
+                    printf("4");
+                    break;
+                case 101: //SRLI = shift right logical immediate
+                    printf("4");
+                    break;
+                case 101: //SRAI = shift right arithmetic immediate
+                    printf("4");
+                    break;
+                default:
+                    printf("Funct3 %d not yet implemented", funct3);
 
             }
             printf("3");
@@ -76,7 +113,6 @@ void temp (int instr){
             rs2 = (instr >> 20) & 0x01f;
             switch (funct3) {
                 case 000: //SB = store byte
-
                     printf("4");
                     break;
                 case 001: //SH = store halfword
@@ -103,6 +139,32 @@ void temp (int instr){
             rs2 = (instr >> 20) & 0x01f;
             funct7 = (instr >> 25);
             switch (funct3) {
+                case 000: //ADD = add
+                    printf("4");
+                    break;
+                case 001: //SLL = shift left logical
+                    printf("4");
+                    break;
+                case 010: //SLT = set less than
+                    printf("4");
+                    break;
+                case 011: //SLTU = set less than unsigned
+                    printf("4");
+                    break;
+                case 100: //XOR = exclusive or
+                    printf("4");
+                    break;
+                case 101: //SRL = shift right logical
+                    printf("4");
+                    break;
+                case 110: //OR = or
+                    printf("4");
+                    break;
+                case 111: //AND = and
+                    printf("4");
+                    break;
+                default:
+                    printf("Funct3 %d not yet implemented", funct3);
 
             }
             break;
@@ -110,7 +172,7 @@ void temp (int instr){
 
 
 
-        case 0110111: //FMT = U
+        case 0110111: //FMT = U //AUIPC
             rd = (instr >> 7) & 0x01f;
             imm = (instr >> 12);
             printf("7");
@@ -160,7 +222,11 @@ void temp (int instr){
             rs1 = (instr >> 15) & 0x01f;
             imm = (instr >> 20);
             switch (funct3) {
-
+                case 000: //JALR = jump and link register
+                    printf("4");
+                    break;
+                default:
+                    printf("Funct3 %d not yet implemented", funct3);
             }
             break;
 
@@ -181,6 +247,11 @@ void temp (int instr){
             rs1 = (instr >> 15) & 0x01f;
             imm = (instr >> 20);
             switch (funct3) {
+                case 000: //ECALL = environment call
+                    printf("4");
+                    break;
+                default:
+                    printf("Funct3 %d not yet implemented", funct3);
 
             }
             break;
