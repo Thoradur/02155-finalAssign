@@ -2,8 +2,7 @@
 // Created by pouls on 13/11/2023.
 // test from AB 13-11 this is heini
 //
-#include "stdio.h"
-
+#include <stdio.h>
 int main() {
 
     static int pc;
@@ -87,7 +86,7 @@ void temp (int instr){
                     printf("4");
                     break;
                 default:
-                    printf("Funct3 %s not yet implemented", funct3);
+                    printf("Funct3 %d not yet implemented", funct3);
 
             }
             printf("5");
@@ -190,6 +189,6 @@ void temp (int instr){
 
 
         default:
-            printf("Opcode %s not yet implemented", opcode);
+            printf("Opcode %d not yet implemented", opcode);
     }
 }
