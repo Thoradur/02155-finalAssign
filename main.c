@@ -81,10 +81,19 @@ void temp (int instr){
                 case 001: //SLLI = shift left logical immediate
                     printf("4");
                     break;
-                case 101: //SRLI = shift right logical immediate
+                case 101: //SRLI = shift right logical immediate and SRAI = shift right arithmetic immediate
+                    imm = (instr >> 20) & 0x01f;
+                    funct7 = (instr >> 25);
+                    if (funct7 == 0000000) { //SRLI
+                        printf("4");
+                    } else if (funct7 == 0100000) { //SRAI
+                        printf("4");
+                    } else {
+                        printf("Funct7 %d not yet implemented", funct7);
+                    }
                     printf("4");
                     break;
-                case 101: //SRAI = shift right arithmetic immediate
+                case 101 && ((instr >> 30) & 0x01)==1: //
                     printf("4");
                     break;
                 default:
@@ -139,7 +148,14 @@ void temp (int instr){
             rs2 = (instr >> 20) & 0x01f;
             funct7 = (instr >> 25);
             switch (funct3) {
-                case 000: //ADD = add
+                case 000: //ADD = add and SUB = subtract
+                    if (funct7 == 0000000) {
+                        printf("4");
+                    } else if (funct7 == 0100000) {
+                        printf("4");
+                    } else {
+                        printf("Funct7 %d not yet implemented", funct7);
+                    }
                     printf("4");
                     break;
                 case 001: //SLL = shift left logical
