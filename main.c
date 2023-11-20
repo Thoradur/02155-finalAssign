@@ -16,9 +16,9 @@ void temp (int opcode){
         case 0000011:
             printf("1");
             break;
-        case 0001111:
+        /*case 0001111: fence og fence.i skal ikke bruges
             printf("2");
-            break;
+            break;*/
         case 0010011:
             printf("3");
             break;
@@ -43,7 +43,7 @@ void temp (int opcode){
         case 1101111:
             printf("10");
             break;
-        case 1110011:
+        case 1110011:// det er kun ecall som skal bruges
             printf("11");
             break;
         default:
