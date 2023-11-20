@@ -40,7 +40,25 @@ void temp (int instr){
             printf("4");
             break;
         case 0100011: //FMT = S NOTDONE
-            funct3 ;
+            imm = (((instr >> 25) & 0x07f) << 5)+((instr >> 7) & 0x01f);
+            funct3 = (instr >> 12) & 0x07;
+            rs1 = (instr >> 15) & 0x01f;
+            rs2 = (instr >> 20) & 0x01f;
+            switch (funct3) {
+                case 000: //SB = store byte
+
+                    printf("4");
+                    break;
+                case 001: //SH = store halfword
+                    printf("4");
+                    break;
+                case 010: //SW = store word
+                    printf("4");
+                    break;
+                default:
+                    printf("Funct3 %s not yet implemented", funct3);
+
+            }
             printf("5");
             break;
         case 0110011: //FMT = R
@@ -52,6 +70,33 @@ void temp (int instr){
             printf("7");
             break;
         case 1100011: //FMT = SB
+            imm = (((instr >> 31) & 0x01) <<12 )| (((instr >> 7) & 0x01) << 11)|(((instr >> 25) & 0x03f)<<5)|(((instr >> 8) & 0x0f)<<1);
+            funct3 = (instr >> 12) & 0x07;
+            rs1 = (instr >> 15) & 0x01f;
+            rs2 = (instr >> 20) & 0x01f;
+            switch (funct3) {
+                case 000: //BEQ = branch equal
+                    printf("4");
+                    break;
+                case 001: //BNE = branch not equal
+                    printf("4");
+                    break;
+                case 100: //BLT = branch less than
+                    printf("4");
+                    break;
+                case 101: //BGE = branch greater than or equal
+                    printf("4");
+                    break;
+                case 110: //BLTU = branch less than unsigned
+                    printf("4");
+                    break;
+                case 111: //BGEU = branch greater than or equal unsigned
+                    printf("4");
+                    break;
+                default:
+                    printf("Funct3 %s not yet implemented", funct3);
+
+            }
             printf("8");
             break;
         case 1100111: //FMT = I
