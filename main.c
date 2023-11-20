@@ -3,9 +3,12 @@
 // test from AB 13-11 this is heini
 //
 #include "stdio.h"
-int main(){
-    puts("Hello World");
-    return 0;
+int main() {
+
+    int a = 1;
+    int b = 2;
+
+    return a+b;
 }
 
 void temp (int opcode){
