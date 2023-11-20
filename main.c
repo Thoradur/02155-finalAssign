@@ -233,7 +233,9 @@ void temp (int instr){
 
 
 
-        case 1101111: //FMT = UJ
+        case 1101111: //FMT = UJ //JAL
+            rd = (instr >> 7) & 0x01f;
+            imm = (((instr >> 31) & 0x01) <<20 )| (((instr >> 12) & 0xff) << 12)|(((instr >> 20) & 0x01) << 11)|(((instr >> 21) & 0x03ff)<<1);
             printf("10");
             break;
 
