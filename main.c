@@ -3,6 +3,7 @@
 // test from AB 13-11 this is heini
 //
 #include "stdio.h"
+
 int main() {
 
     static int pc;
@@ -69,7 +70,7 @@ void temp (int instr){
 
 
 
-        case 0100011: //FMT = S NOTDONE
+        case 0100011: //FMT = S
             imm = (((instr >> 25) & 0x07f) << 5)+((instr >> 7) & 0x01f);
             funct3 = (instr >> 12) & 0x07;
             rs1 = (instr >> 15) & 0x01f;
@@ -144,7 +145,7 @@ void temp (int instr){
                     printf("4");
                     break;
                 default:
-                    printf("Funct3 %s not yet implemented", funct3);
+                    printf("Funct3 %d not yet implemented", funct3);
 
             }
             printf("8");
