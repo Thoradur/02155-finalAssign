@@ -5,21 +5,29 @@
 #include "stdio.h"
 int main() {
 
-    int a = 1;
-    int b = 2;
+    static int pc;
+    static int reg[32];
 
-    return a+b;
+    return 0;
 }
 
 void temp (int opcode){
     switch (opcode) {
-        case 0000011:
+        case 0000011: //FMT = I
             printf("1");
+            rd = (instr >> 7) & 0x01f;
+            int funct = (instr >> 12) & 0x07;
+            int rs1 = (instr >> 15) & 0x01f;
+            int imm = (instr >> 20);
+            switch (funct) {
+
+            }
             break;
-        /*case 0001111: fence og fence.i skal ikke bruges
-            printf("2");
-            break;*/
-        case 0010011:
+            /*case 0001111: fence og fence.i skal ikke bruges
+                printf("2");
+                break;*/
+        case 0010011: //FMT = I
+            rd = (instr >> 7) & 0x01f;
             printf("3");
             break;
         case 0010111:
@@ -47,6 +55,6 @@ void temp (int opcode){
             printf("11");
             break;
         default:
-            printf("error in the opcode value");
+            printf("Opcode %s not yet implemented", opcode);
     }
 }
