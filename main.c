@@ -11,7 +11,11 @@ int main() {
     return 0;
 }
 
-void temp (int opcode){
+void temp (int instr){
+    int opcode = instr & 0x7F;
+    int rd;
+    int imm;
+    int funct3;
     switch (opcode) {
         case 0000011: //FMT = I
             printf("1");
@@ -30,28 +34,33 @@ void temp (int opcode){
             rd = (instr >> 7) & 0x01f;
             printf("3");
             break;
-        case 0010111:
+        case 0010111: //FMT = U
+            rd = (instr >> 7) & 0x01f;
+            imm = (instr >> 12);
             printf("4");
             break;
-        case 0100011:
+        case 0100011: //FMT = S NOTDONE
+            funct3 ;
             printf("5");
             break;
-        case 0110011:
+        case 0110011: //FMT = R
             printf("6");
             break;
-        case 0110111:
+        case 0110111: //FMT = U
+            rd = (instr >> 7) & 0x01f;
+            imm = (instr >> 12);
             printf("7");
             break;
-        case 1100011:
+        case 1100011: //FMT = SB
             printf("8");
             break;
-        case 1100111:
+        case 1100111: //FMT = I
             printf("9");
             break;
-        case 1101111:
+        case 1101111: //FMT = UJ
             printf("10");
             break;
-        case 1110011:// det er kun ecall som skal bruges
+        case 1110011://FMT = I  det er kun ecall som skal bruges
             printf("11");
             break;
         default:
