@@ -3,15 +3,27 @@
 // test from AB 13-11 this is heini
 //
 #include <stdio.h>
+
+void temp (int instr, int pc);
+
+
+
 int main() {
 
-    static int pc;
+    static int *pc;
     static int reg[32];
 
+    temp(0000011, *pc);
     return 0;
 }
 
-void temp (int instr){
+//Operatsions
+
+
+
+
+//instructions
+void temp (int instr, int pc){
     int opcode = instr & 0x7F;
     int rd;
     int imm;
@@ -20,6 +32,10 @@ void temp (int instr){
     int rs2;
     int funct7;
     switch (opcode) {
+
+
+
+
         case 0000011: //FMT = I
             printf("1");
             rd = (instr >> 7) & 0x01f;
@@ -28,19 +44,19 @@ void temp (int instr){
             imm = (instr >> 20);
             switch (funct3) {
                 case 000: //LB = load byte
-                    printf("4");
+                    printf("load byte not implemented missing memory");
                     break;
                 case 001: //LH = load halfword
-                    printf("4");
+                    printf("load halfword not implemented missing memory");
                     break;
                 case 010: //LW = load word
-                    printf("4");
+                    printf("load halfword not implemented missing memory");
                     break;
                 case 100: //LBU = load byte unsigned
-                    printf("4");
+                    printf("load byte unsigned not implemented missing memory");
                     break;
                 case 101: //LHU = load halfword unsigned
-                    printf("4");
+                    printf("load halfword not implemented missing memory");
                     break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
@@ -61,41 +77,41 @@ void temp (int instr){
             imm = (instr >> 20);
             switch (funct3) {
                 case 000: //ADDI = add immediate
-                    printf("4");
+                    rd = rs1 + imm;
                     break;
                 case 010: //SLTI = set less than immediate
-                    printf("4");
+                    rd = rs1 < imm;
                     break;
                 case 011: //SLTIU = set less than immediate unsigned
-                    printf("4");
+                    rd = rs1 < imm;
                     break;
                 case 100: //XORI = exclusive or immediate
-                    printf("4");
+                    rd = rs1 ^ imm;
                     break;
                 case 110: //ORI = or immediate
-                    printf("4");
+                    rd = rs1 | imm;
                     break;
                 case 111: //ANDI = and immediate
-                    printf("4");
+                    rd = rs1 & imm;
                     break;
                 case 001: //SLLI = shift left logical immediate
-                    printf("4");
+                    rd = rs1 << imm;
                     break;
                 case 101: //SRLI = shift right logical immediate and SRAI = shift right arithmetic immediate
                     imm = (instr >> 20) & 0x01f;
                     funct7 = (instr >> 25);
                     if (funct7 == 0000000) { //SRLI
-                        printf("4");
+                        rd = rs1 >> imm;
                     } else if (funct7 == 0100000) { //SRAI
-                        printf("4");
+                        printf("spunk not imlemented");
                     } else {
                         printf("Funct7 %d not yet implemented", funct7);
                     }
                     printf("4");
                     break;
-                case 101 && ((instr >> 30) & 0x01)==1: //
+                /*case 101 && ((instr >> 30) & 0x01)==1: //
                     printf("4");
-                    break;
+                    break;*/
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
 
@@ -106,10 +122,10 @@ void temp (int instr){
 
 
 
-        case 0010111: //FMT = U
+        case 0010111: //FMT = U AUIPC
             rd = (instr >> 7) & 0x01f;
             imm = (instr >> 12);
-            printf("4");
+            rd = pc + imm;
             break;
 
 
@@ -122,13 +138,13 @@ void temp (int instr){
             rs2 = (instr >> 20) & 0x01f;
             switch (funct3) {
                 case 000: //SB = store byte
-                    printf("4");
+                    printf("store byte not implemented missing memory");
                     break;
                 case 001: //SH = store halfword
-                    printf("4");
+                    printf("store halfword not implemented missing memory");
                     break;
                 case 010: //SW = store word
-                    printf("4");
+                    printf("store word not implemented missing memory");
                     break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
@@ -150,34 +166,33 @@ void temp (int instr){
             switch (funct3) {
                 case 000: //ADD = add and SUB = subtract
                     if (funct7 == 0000000) {
-                        printf("4");
-                    } else if (funct7 == 0100000) {
-                        printf("4");
+                        rd = rs1 + rs2;
+                    } else if (funct7 == 0100000) { // SUB
+                        rd = rs1 - rs2;
                     } else {
                         printf("Funct7 %d not yet implemented", funct7);
                     }
-                    printf("4");
                     break;
                 case 001: //SLL = shift left logical
-                    printf("4");
+                    rd = rs1 << rs2;
                     break;
                 case 010: //SLT = set less than
-                    printf("4");
+                    rd = rs1 < rs2;
                     break;
                 case 011: //SLTU = set less than unsigned
-                    printf("4");
+                    rd = rs1 < rs2;
                     break;
                 case 100: //XOR = exclusive or
-                    printf("4");
+                    rd = rs1 ^ rs2;
                     break;
-                case 101: //SRL = shift right logical
-                    printf("4");
+                case 101: //SRL = shift right logical miising slra
+                    rd = rs1 >> rs2;
                     break;
                 case 110: //OR = or
-                    printf("4");
+                    rd = rs1 | rs2;
                     break;
                 case 111: //AND = and
-                    printf("4");
+                    rd = rs1 & rs2;
                     break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
@@ -188,10 +203,10 @@ void temp (int instr){
 
 
 
-        case 0110111: //FMT = U //AUIPC
+        case 0110111: //FMT = U //LUI
             rd = (instr >> 7) & 0x01f;
             imm = (instr >> 12);
-            printf("7");
+            rd = imm;
             break;
 
 
@@ -204,22 +219,34 @@ void temp (int instr){
             rs2 = (instr >> 20) & 0x01f;
             switch (funct3) {
                 case 000: //BEQ = branch equal
-                    printf("4");
+                    if(rs1 == rs2){
+                        pc = pc + imm;
+                    }
                     break;
                 case 001: //BNE = branch not equal
-                    printf("4");
+                    if(rs1 != rs2){
+                        pc = pc + imm;
+                    }
                     break;
                 case 100: //BLT = branch less than
-                    printf("4");
+                    if(rs1 > rs2){
+                        pc = pc + imm;
+                    }
                     break;
                 case 101: //BGE = branch greater than or equal
-                    printf("4");
+                    if(rs1 >= rs2){
+                        pc = pc + imm;
+                    }
                     break;
                 case 110: //BLTU = branch less than unsigned
-                    printf("4");
+                    if(rs1 < rs2){
+                        pc = pc + imm;
+                    }
                     break;
                 case 111: //BGEU = branch greater than or equal unsigned
-                    printf("4");
+                    if(rs1 >= rs2){
+                        pc = pc + imm;
+                    }
                     break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
@@ -239,7 +266,8 @@ void temp (int instr){
             imm = (instr >> 20);
             switch (funct3) {
                 case 000: //JALR = jump and link register
-                    printf("4");
+                    rd = pc+4;
+                    pc = rs1 +imm;
                     break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
