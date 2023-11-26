@@ -25,7 +25,7 @@ static int progr[] = {
 };
 
 // in
-int temp (int instr, int reg[32], uint32_t *memory);
+int temp (int instr, uint32_t reg[32], uint32_t *memory);
 void readBinFile(uint32_t *memory);
 
 
