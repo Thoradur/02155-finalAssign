@@ -4,24 +4,34 @@
 //
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+
+// static program test
+static int progr[] = {
+        // As minimal RISC-V assembler example
+        0x00200093, // addi x1 x0 2
+        0x00300113, // addi x2 x0 3
+        0x002081b3, // add x3 x1 x2
+};
+
 // in
-void temp (int instr, int pc, int reg[32]);
+void temp (int instr, int reg[32]);
 void readBinFile();
 
 
 //GLOBAL VAL
 int *memory;
+int *pc;
+/*
 
-
-
-
+*/
 int main() {
 
     size_t size_in_bytes = 1024 * 1024;
 
-    static int *pc;
-    static int reg[32];
     memory = malloc(size_in_bytes);
+
+    static int reg[32];
 
     temp(0000011, *pc, reg);
     return 0;
@@ -33,7 +43,7 @@ int main() {
 
 
 //instructions
-void temp (int instr, int pc, int reg[32]){
+void temp (int instr, int reg[32]){
     int opcode = instr & 0x7F;
     int rd;
     int imm;
@@ -324,7 +334,7 @@ void temp (int instr, int pc, int reg[32]){
 
 void readBinFile(){
     char str[] = "test/task1/addlarge.bin";
-    FILE *fp fopen(str,"r");
+    FILE *fp = fopen(str,"r");
 
     if (fp == NULL){
         perror("Unable to find file");
