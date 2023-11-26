@@ -3,17 +3,27 @@
 // test from AB 13-11 this is heini
 //
 #include <stdio.h>
+#include <stdlib.h>
+// in
+void temp (int instr, int pc, int reg[32]);
+void readBinFile();
 
-void temp (int instr, int pc);
+
+//GLOBAL VAL
+int *memory;
+
 
 
 
 int main() {
 
+    size_t size_in_bytes = 1024 * 1024;
+
     static int *pc;
     static int reg[32];
+    memory = malloc(size_in_bytes);
 
-    temp(0000011, *pc);
+    temp(0000011, *pc, reg);
     return 0;
 }
 
@@ -23,7 +33,7 @@ int main() {
 
 
 //instructions
-void temp (int instr, int pc){
+void temp (int instr, int pc, int reg[32]){
     int opcode = instr & 0x7F;
     int rd;
     int imm;
