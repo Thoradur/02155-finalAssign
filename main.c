@@ -53,7 +53,6 @@ int main() {
     while(1){
 
         temp(memory[pc], reg, memory);
-        pc += 4;
 
 //        temp(progr[0], reg);
 //        temp(progr[1], reg);
@@ -273,6 +272,7 @@ int temp (uint32_t instr, uint32_t reg[32], uint32_t *memory){
             rd = (instr >> 7) & 0x01f;
             imm = (instr >> 12);
             reg[rd] = imm<<12;
+            pc = pc + 4;
             break;
 
 
