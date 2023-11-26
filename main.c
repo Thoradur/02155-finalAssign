@@ -52,7 +52,10 @@ int main() {
     int i = 1;
     while(1){
 
-        temp(memory[pc], reg, memory);
+        i = temp(memory[pc], reg, memory);
+        if (i == 0){
+            break;
+        }
 
 //        temp(progr[0], reg);
 //        temp(progr[1], reg);
@@ -359,6 +362,15 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
             imm = (instr >> 20);
             switch (funct3) {
                 case 0b000: //ECALL = environment call
+                    switch (rd){
+                        case 10: //exit
+                            printf("exit");
+                            return 0;
+                            exit(0);
+                            break;
+                        default:
+                            printf("Funct3 %d not yet implemented", funct3);
+                    }
                     printf("not implenteted");
                     return 0;
 
