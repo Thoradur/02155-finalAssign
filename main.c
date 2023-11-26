@@ -18,7 +18,7 @@ static int progr[] = {
 };
 
 // in
-void temp (int instr, int reg[32], uint32_t *memory);
+int temp (int instr, int reg[32], uint32_t *memory);
 void readBinFile(uint32_t *memory);
 
 
@@ -42,21 +42,17 @@ int main() {
     printf("Start of RISC-V Simiulator\n");
 
     pc = 0;
-    int i;
+    int i = 1;
     while(1){
-        printf("pc = %d\n",pc);
-        printf("instr = %d\n",memory[pc]);
-        printf("instr = %d\n",memory[pc+4]);
-        printf("instr = %d\n",memory[pc+8]);
-        printf("instr = %d\n",memory[pc+12]);
+
         temp(memory[pc], reg, memory);
+        pc += 4;
 
 //        temp(progr[0], reg);
 //        temp(progr[1], reg);
 //        temp(progr[2], reg);
 
 
-        break;
     }
 
     printf("x0  = 0x%08x,  x1 = 0x%08x,  x2 = 0x%08x,  x3 = 0x%08x \n",reg[0],reg[1],reg[2],reg[3]);
@@ -81,7 +77,7 @@ int main() {
 
 
 //instructions
-void temp (int instr, int reg[32], uint32_t *memory){
+int temp (int instr, int reg[32], uint32_t *memory){
     int opcode = instr & 0x7F;
     int rd;
     int imm;
@@ -124,6 +120,7 @@ void temp (int instr, int reg[32], uint32_t *memory){
                     printf("Funct3 %d not yet implemented", funct3);
 
             }
+            pc +=4;
             break;
 
 
@@ -177,7 +174,7 @@ void temp (int instr, int reg[32], uint32_t *memory){
                     printf("Funct3 %d not yet implemented", funct3);
 
             }
-
+            pc += 4;
             break;
 
 
@@ -186,7 +183,8 @@ void temp (int instr, int reg[32], uint32_t *memory){
         case 0b0010111: //FMT = U AUIPC
             rd = (instr >> 7) & 0x01f;
             imm = (instr >> 12);
-            //reg[rd] = pc + imm;
+            reg[rd] = pc + imm;
+            pc +=4;
             break;
 
 
@@ -211,7 +209,7 @@ void temp (int instr, int reg[32], uint32_t *memory){
                     printf("Funct3 %d not yet implemented", funct3);
 
             }
-
+            pc +=4;
             break;
 
 
@@ -258,6 +256,7 @@ void temp (int instr, int reg[32], uint32_t *memory){
                     printf("Funct3 %d not yet implemented", funct3);
 
             }
+            pc +=4;
             break;
 
 
@@ -354,6 +353,7 @@ void temp (int instr, int reg[32], uint32_t *memory){
             switch (funct3) {
                 case 0b000: //ECALL = environment call
                     printf("not implenteted");
+                    return 0;
 
                     break;
                 default:
@@ -368,6 +368,7 @@ void temp (int instr, int reg[32], uint32_t *memory){
         default:
             printf("Opcode %d not yet implemented", opcode);
     }
+    return 1;
 }
 
 
@@ -393,7 +394,5 @@ void readBinFile(uint32_t *memory){
         word = getw(fp);
     }
     fclose(fp);
-
-
 
 }
