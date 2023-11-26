@@ -25,7 +25,7 @@ static int progr[] = {
 };
 
 // in
-int temp (uint32_t instr, uint32_t reg[32], uint32_t *memory);
+int temp (int instr, uint32_t reg[32], uint32_t *memory);
 void readBinFile(uint32_t *memory);
 
 
@@ -83,14 +83,14 @@ int main() {
 
 
 //instructions
-int temp (uint32_t instr, uint32_t reg[32], uint32_t *memory){
-    uint32_t opcode = instr & 0x7F;
-    uint32_t rd;
-    uint32_t imm;
-    uint32_t funct3;
-    uint32_t rs1;
-    uint32_t rs2;
-    uint32_t funct7;
+int temp (int instr, uint32_t reg[32], uint32_t *memory){
+    int opcode = instr & 0x7F;
+    int rd;
+    int imm;
+    int funct3;
+    int rs1;
+    int rs2;
+    int funct7;
     switch (opcode) {
 
 
