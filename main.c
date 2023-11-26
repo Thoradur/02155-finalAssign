@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#define testfile "test/task1/addlarge.bin"
+
+
 // static program test
 static int progr[] = {
         // As minimal RISC-V assembler example
@@ -15,38 +18,48 @@ static int progr[] = {
 };
 
 // in
-void temp (int instr, int reg[32]);
-void readBinFile();
+void temp (int instr, int reg[32], uint32_t *memory);
+void readBinFile(uint32_t *memory);
 
 
 //GLOBAL VAL
-int *memory;
+
 int pc;
 /*
 
 */
 int main() {
-    size_t size_in_bytes = 1024 * 1024;
+    //size_t size_in_bytes = 1024 * 1024;
 
-    memory = malloc(size_in_bytes);
-
+    //memory = malloc(size_in_bytes);
+    uint32_t *memory = malloc(0xFFFFFFFF * sizeof(uint32_t));
     static int reg[32];
 
     //temp(0000011, reg);
+
+    readBinFile(memory);
 
     printf("Start of RISC-V Simiulator\n");
 
     pc = 0;
     int i;
     while(1){
-        temp(progr[0], reg);
-        temp(progr[1], reg);
-        temp(progr[2], reg);
+        printf("pc = %d\n",pc);
+        printf("instr = %d\n",memory[pc]);
+        printf("instr = %d\n",memory[pc+4]);
+        printf("instr = %d\n",memory[pc+8]);
+        printf("instr = %d\n",memory[pc+12]);
+        temp(memory[pc], reg, memory);
+
+//        temp(progr[0], reg);
+//        temp(progr[1], reg);
+//        temp(progr[2], reg);
+
 
         break;
     }
 
-    printf("x0 = 0x%08x,  x1 = 0x%08x,  x2 = 0x%08x,  x3 = 0x%08x \n",reg[0],reg[1],reg[2],reg[3]);
+    printf("x0  = 0x%08x,  x1 = 0x%08x,  x2 = 0x%08x,  x3 = 0x%08x \n",reg[0],reg[1],reg[2],reg[3]);
     printf("x4  = 0x%08x,  x5 = 0x%08x,  x6 = 0x%08x,  x7 = 0x%08x \n",reg[4],reg[5],reg[6],reg[7]);
     printf("x8  = 0x%08x,  x9 = 0x%08x, x10 = 0x%08x, x11 = 0x%08x \n",reg[8],reg[9],reg[10],reg[11]);
     printf("x12 = 0x%08x, x13 = 0x%08x, x14 = 0x%08x, x15 = 0x%08x \n",reg[12],reg[13],reg[14],reg[15]);
@@ -68,7 +81,7 @@ int main() {
 
 
 //instructions
-void temp (int instr, int reg[32]){
+void temp (int instr, int reg[32], uint32_t *memory){
     int opcode = instr & 0x7F;
     int rd;
     int imm;
@@ -82,7 +95,6 @@ void temp (int instr, int reg[32]){
 
 
         case 0b0000011: //FMT = I   (LB,LH,LW,LBU,LHU might be wrong)
-            printf("1");
             rd = (instr >> 7) & 0x01f;
             funct3 = (instr >> 12) & 0x07;
             rs1 = (instr >> 15) & 0x01f;
@@ -199,14 +211,13 @@ void temp (int instr, int reg[32]){
                     printf("Funct3 %d not yet implemented", funct3);
 
             }
-            printf("5");
+
             break;
 
 
 
 
         case 0b0110011: //FMT = R
-            printf("6");
             rd = (instr >> 7) & 0x01f;
             funct3 = (instr >> 12) & 0x07;
             rs1 = (instr >> 15) & 0x01f;
@@ -301,14 +312,13 @@ void temp (int instr, int reg[32]){
                     printf("Funct3 %d not yet implemented", funct3);
 
             }
-            printf("8");
+
             break;
 
 
 
 
         case 0b1100111: //FMT = I
-            printf("9");
             rd = (instr >> 7) & 0x01f;
             funct3 = (instr >> 12) & 0x07;
             rs1 = (instr >> 15) & 0x01f;
@@ -337,14 +347,14 @@ void temp (int instr, int reg[32]){
 
 
         case 0b1110011://FMT = I  det er kun ecall som skal bruges
-            printf("11");
             rd = (instr >> 7) & 0x01f;
             funct3 = (instr >> 12) & 0x07;
             rs1 = (instr >> 15) & 0x01f;
             imm = (instr >> 20);
             switch (funct3) {
                 case 0b000: //ECALL = environment call
-                    printf("4");
+                    printf("not implenteted");
+
                     break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
@@ -361,14 +371,14 @@ void temp (int instr, int reg[32]){
 }
 
 
-void readBinFile(){
-    char str[] = "test/task1/addlarge.bin";
+void readBinFile(uint32_t *memory){
+    char str[] = testfile;
     FILE *fp = fopen(str,"r");
-
     if (fp == NULL){
         perror("Unable to find file");
         exit(1);
     }
+    printf("File found %s\n",str);
 
     fseek(fp,0,SEEK_END);
     int size = ftell(fp);
@@ -377,6 +387,7 @@ void readBinFile(){
     uint32_t word = getw(fp);
     int i = 0;
     while (word != EOF){
+        printf("%d\n",word);
         memory[i] = word;
         i += 4;
         word = getw(fp);
