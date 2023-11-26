@@ -360,24 +360,12 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
             funct3 = (instr >> 12) & 0x07;
             rs1 = (instr >> 15) & 0x01f;
             imm = (instr >> 20);
-            switch (funct3) {
-                case 0b000: //ECALL = environment call
-                    switch (rd){
-                        case 10: //exit
-                            printf("exit");
-                            return 0;
-                            exit(0);
-                            break;
-                        default:
-                            printf("Funct3 %d not yet implemented", funct3);
-                    }
-                    printf("not implenteted");
+            switch (reg[17]){
+                case 10: //exit
+                    //printf("exit");
                     return 0;
-
-                    break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
-
             }
             break;
 
@@ -407,7 +395,7 @@ void readBinFile(uint32_t *memory){
     uint32_t word = getw(fp);
     int i = 0;
     while (word != EOF){
-        printf("%d\n",word);
+        //printf("%d\n",word);
         memory[i] = word;
         i += 4;
         word = getw(fp);
