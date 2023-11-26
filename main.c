@@ -160,10 +160,10 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
                 case 0b101: //SRLI = shift right logical immediate and SRAI = shift right arithmetic immediate
                     imm = (instr >> 20) & 0x01f;
                     funct7 = (instr >> 25);
-                    if (funct7 == 0000000) { //SRLI
+                    if (funct7 == 0b0000000) { //SRLI
                         reg[rd] = reg[rs1] >> imm;
-                    } else if (funct7 == 0100000) { //SRAI
-                        printf("spunk not imlemented");
+                    } else if (funct7 == 0b0100000) { //SRAI
+                        reg[rd] = reg[rs1] >> imm;
                     } else {
                         printf("Funct7 %d not yet implemented", funct7);
                     }
