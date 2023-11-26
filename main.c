@@ -26,14 +26,24 @@ int *pc;
 
 */
 int main() {
-
     size_t size_in_bytes = 1024 * 1024;
 
     memory = malloc(size_in_bytes);
 
     static int reg[32];
 
-    temp(0000011, *pc, reg);
+    temp(0000011, reg);
+
+    printf("Start of RISC-V Simiulator\n");
+
+    pc = 0;
+    int i;
+    while(1){
+        temp(progr[i, reg[]);
+        break;
+    }
+
+    printf("END of RISC-V Simiulator\n");
     return 0;
 }
 
@@ -56,7 +66,7 @@ void temp (int instr, int reg[32]){
 
 
 
-        case 0000011: //FMT = I
+        case 0000011: //FMT = I   (LB,LH,LW,LBU,LHU might be wrong)
             printf("1");
             rd = (instr >> 7) & 0x01f;
             funct3 = (instr >> 12) & 0x07;
@@ -64,19 +74,24 @@ void temp (int instr, int reg[32]){
             imm = (instr >> 20);
             switch (funct3) {
                 case 000: //LB = load byte
-                    reg[rd] = memory[reg[rs1]+imm]; //might be wrong
+                    reg[rd] = memory[reg[rs1]+imm];
                     break;
                 case 001: //LH = load halfword
-                    printf("load halfword not implemented missing memory");
+                    reg[rd] = memory[reg[rs1]+imm] & 0x0ff;
+                    reg[rd] += (memory[(reg[rs1] + imm) + 1]) << 8;
                     break;
                 case 010: //LW = load word
-                    printf("load halfword not implemented missing memory");
+                    reg[rd] = memory[reg[rs1]+imm] & 0x0ff;
+                    reg[rd] += (memory[(reg[rs1] + imm) + 1]) << 8;
+                    reg[rd] += (memory[(reg[rs1] + imm) + 2]) << 16;
+                    reg[rd] += (memory[(reg[rs1] + imm) + 3]) << 24;
                     break;
                 case 100: //LBU = load byte unsigned
-                    printf("load byte unsigned not implemented missing memory");
+                    reg[rd] = memory[reg[rs1] + imm] & 0xff;
                     break;
                 case 101: //LHU = load halfword unsigned
-                    printf("load halfword not implemented missing memory");
+                    reg[rd] = memory[reg[rs1]+imm] & 0x0ff;
+                    reg[rd] += (memory[(reg[rs1] + imm) + 1]) << 8;
                     break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
@@ -127,7 +142,6 @@ void temp (int instr, int reg[32]){
                     } else {
                         printf("Funct7 %d not yet implemented", funct7);
                     }
-                    printf("4");
                     break;
                     /*case 101 && ((instr >> 30) & 0x01)==1: //
                         printf("4");
@@ -136,7 +150,7 @@ void temp (int instr, int reg[32]){
                     printf("Funct3 %d not yet implemented", funct3);
 
             }
-            printf("3");
+
             break;
 
 
