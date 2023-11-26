@@ -171,7 +171,8 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
                     if (funct7 == 0b0000000) { //SRLI
                         reg[rd] = reg[rs1] >> imm;
                     } else if (funct7 == 0b0100000) { //SRAI
-                        reg[rd] = reg[rs1] >> imm;
+                        int s = -(reg[rs1] >> 31);
+                        reg[rd] = (reg[rs1] >> imm) | (s << (32 - imm));
                     } else {
                         printf("Funct7 %d not yet implemented", funct7);
                     }
