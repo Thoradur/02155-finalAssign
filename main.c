@@ -44,7 +44,7 @@ void temp (int instr, int pc){
             imm = (instr >> 20);
             switch (funct3) {
                 case 000: //LB = load byte
-                    printf("load byte not implemented missing memory");
+                    reg[rd] = memory[reg[rs1]+imm]; //might be wrong
                     break;
                 case 001: //LH = load halfword
                     printf("load halfword not implemented missing memory");
@@ -77,31 +77,31 @@ void temp (int instr, int pc){
             imm = (instr >> 20);
             switch (funct3) {
                 case 000: //ADDI = add immediate
-                    rd = rs1 + imm;
+                    reg[rd] = reg[rs1] + imm;
                     break;
                 case 010: //SLTI = set less than immediate
-                    rd = rs1 < imm;
+                    reg[rd] = reg[rs1] < imm;
                     break;
                 case 011: //SLTIU = set less than immediate unsigned
-                    rd = rs1 < imm;
+                    reg[rd] = reg[rs1] < imm;
                     break;
                 case 100: //XORI = exclusive or immediate
-                    rd = rs1 ^ imm;
+                    reg[rd] = reg[rs1] ^ imm;
                     break;
                 case 110: //ORI = or immediate
-                    rd = rs1 | imm;
+                    reg[rd] = reg[rs1] | imm;
                     break;
                 case 111: //ANDI = and immediate
-                    rd = rs1 & imm;
+                    reg[rd] = reg[rs1] & imm;
                     break;
                 case 001: //SLLI = shift left logical immediate
-                    rd = rs1 << imm;
+                    reg[rd] = reg[rs1] << imm;
                     break;
                 case 101: //SRLI = shift right logical immediate and SRAI = shift right arithmetic immediate
                     imm = (instr >> 20) & 0x01f;
                     funct7 = (instr >> 25);
                     if (funct7 == 0000000) { //SRLI
-                        rd = rs1 >> imm;
+                        reg[rd] = reg[rs1] >> imm;
                     } else if (funct7 == 0100000) { //SRAI
                         printf("spunk not imlemented");
                     } else {
@@ -109,9 +109,9 @@ void temp (int instr, int pc){
                     }
                     printf("4");
                     break;
-                /*case 101 && ((instr >> 30) & 0x01)==1: //
-                    printf("4");
-                    break;*/
+                    /*case 101 && ((instr >> 30) & 0x01)==1: //
+                        printf("4");
+                        break;*/
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
 
@@ -219,32 +219,32 @@ void temp (int instr, int pc){
             rs2 = (instr >> 20) & 0x01f;
             switch (funct3) {
                 case 000: //BEQ = branch equal
-                    if(rs1 == rs2){
+                    if(reg[rs1] == reg[rs2]){
                         pc = pc + imm;
                     }
                     break;
                 case 001: //BNE = branch not equal
-                    if(rs1 != rs2){
+                    if(reg[rs1] != reg[rs2]){
                         pc = pc + imm;
                     }
                     break;
                 case 100: //BLT = branch less than
-                    if(rs1 > rs2){
+                    if(reg[rs1] < reg[rs2]){
                         pc = pc + imm;
                     }
                     break;
                 case 101: //BGE = branch greater than or equal
-                    if(rs1 >= rs2){
+                    if(reg[rs1] >= reg[rs2]){
                         pc = pc + imm;
                     }
                     break;
                 case 110: //BLTU = branch less than unsigned
-                    if(rs1 < rs2){
+                    if(reg[rs1] < reg[rs2]){
                         pc = pc + imm;
                     }
                     break;
                 case 111: //BGEU = branch greater than or equal unsigned
-                    if(rs1 >= rs2){
+                    if(reg[rs1] >= reg[rs2]){
                         pc = pc + imm;
                     }
                     break;
@@ -266,8 +266,8 @@ void temp (int instr, int pc){
             imm = (instr >> 20);
             switch (funct3) {
                 case 000: //JALR = jump and link register
-                    rd = pc+4;
-                    pc = rs1 +imm;
+                    reg[rd] = pc+4;
+                    pc = reg[rs1] +imm;
                     break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
@@ -280,7 +280,8 @@ void temp (int instr, int pc){
         case 1101111: //FMT = UJ //JAL
             rd = (instr >> 7) & 0x01f;
             imm = (((instr >> 31) & 0x01) <<20 )| (((instr >> 12) & 0xff) << 12)|(((instr >> 20) & 0x01) << 11)|(((instr >> 21) & 0x03ff)<<1);
-            printf("10");
+            reg[rd] = pc+4;
+            pc = pc + imm;
             break;
 
 
