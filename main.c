@@ -4,7 +4,14 @@
 //
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifdef  linux
+#include <stdint-gcc.h>
+
+#elif _WIN32
+
 #include <stdint.h>
+#endif
 
 #define testfile "test/task1/addlarge.bin"
 
