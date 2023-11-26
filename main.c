@@ -272,7 +272,7 @@ int temp (uint32_t instr, uint32_t reg[32], uint32_t *memory){
         case 0b0110111: //FMT = U //LUI
             rd = (instr >> 7) & 0x01f;
             imm = (instr >> 12);
-            reg[rd] = imm;
+            reg[rd] = imm<<12;
             break;
 
 
