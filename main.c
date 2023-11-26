@@ -4,7 +4,14 @@
 //
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifdef __linux__
+
+#include "stdint-gcc.h"
+#elif _WIN32
+
 #include <stdint.h>
+#endif
 
 #define testfile "test/task1/addlarge.bin"
 
@@ -32,7 +39,7 @@ int main() {
     //size_t size_in_bytes = 1024 * 1024;
 
     //memory = malloc(size_in_bytes);
-    uint32_t *memory = malloc(0xFFFFFFFF * sizeof(uint32_t));
+    uint32_t *memory = malloc(0xFFFFF * sizeof(uint32_t));
     static int reg[32];
 
     //temp(0000011, reg);
