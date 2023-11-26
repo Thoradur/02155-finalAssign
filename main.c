@@ -320,3 +320,30 @@ void temp (int instr, int pc, int reg[32]){
             printf("Opcode %d not yet implemented", opcode);
     }
 }
+
+
+void readBinFile(){
+    char str[] = "test/task1/addlarge.bin";
+    FILE *fp fopen(str,"r");
+
+    if (fp == NULL){
+        perror("Unable to find file");
+        exit(1);
+    }
+
+    fseek(fp,0,SEEK_END);
+    int size = ftell(fp);
+    fseek(fp,0,SEEK_SET);
+
+    uint32_t word = getw(fp);
+    int i = 0;
+    while (word != EOF){
+        memory[i] = word;
+        i += 4;
+        word = getw(fp);
+    }
+    fclose(fp);
+
+
+
+}
