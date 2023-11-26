@@ -40,7 +40,7 @@ int main() {
 
     //memory = malloc(size_in_bytes);
     uint32_t *memory = malloc(0xFFFFF * sizeof(uint32_t));
-    static int reg[32];
+    uint32_t reg[32] ={0};
 
     //temp(0000011, reg);
 
@@ -53,7 +53,6 @@ int main() {
     while(1){
 
         temp(memory[pc], reg, memory);
-        pc += 4;
 
 //        temp(progr[0], reg);
 //        temp(progr[1], reg);
@@ -84,7 +83,7 @@ int main() {
 
 
 //instructions
-int temp (int instr, int reg[32], uint32_t *memory){
+int temp (int instr, uint32_t reg[32], uint32_t *memory){
     int opcode = instr & 0x7F;
     int rd;
     int imm;
@@ -272,7 +271,8 @@ int temp (int instr, int reg[32], uint32_t *memory){
         case 0b0110111: //FMT = U //LUI
             rd = (instr >> 7) & 0x01f;
             imm = (instr >> 12);
-            rd = imm;
+            reg[rd] = imm<<12;
+            pc = pc + 4;
             break;
 
 
