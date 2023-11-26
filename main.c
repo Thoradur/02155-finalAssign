@@ -46,6 +46,18 @@ int main() {
         break;
     }
 
+    printf("x0 = 0x%08x,  x1 = 0x%08x,  x2 = 0x%08x,  x3 = 0x%08x \n",reg[0],reg[1],reg[2],reg[3]);
+    printf("x4  = 0x%08x,  x5 = 0x%08x,  x6 = 0x%08x,  x7 = 0x%08x \n",reg[4],reg[5],reg[6],reg[7]);
+    printf("x8  = 0x%08x,  x9 = 0x%08x, x10 = 0x%08x, x11 = 0x%08x \n",reg[8],reg[9],reg[10],reg[11]);
+    printf("x12 = 0x%08x, x13 = 0x%08x, x14 = 0x%08x, x15 = 0x%08x \n",reg[12],reg[13],reg[14],reg[15]);
+    printf("x16 = 0x%08x, x17 = 0x%08x, x18 = 0x%08x, x19 = 0x%08x \n",reg[16],reg[17],reg[18],reg[19]);
+    printf("x20 = 0x%08x, x21 = 0x%08x, x22 = 0x%08x, x23 = 0x%08x \n",reg[20],reg[21],reg[22],reg[23]);
+    printf("x24 = 0x%08x, x25 = 0x%08x, x26 = 0x%08x, x27 = 0x%08x \n",reg[24],reg[25],reg[26],reg[27]);
+    printf("x28 = 0x%08x, x29 = 0x%08x, x30 = 0x%08x, x31 = 0x%08x \n",reg[28],reg[29],reg[30],reg[31]);
+
+
+
+
     printf("END of RISC-V Simiulator\n");
     return 0;
 }
@@ -201,35 +213,35 @@ void temp (int instr, int reg[32]){
             rs2 = (instr >> 20) & 0x01f;
             funct7 = (instr >> 25);
             switch (funct3) {
-                case 000: //ADD = add and SUB = subtract
-                    if (funct7 == 0000000) {
-                        rd = rs1 + rs2;
-                    } else if (funct7 == 0100000) { // SUB
-                        rd = rs1 - rs2;
+                case 0b000: //ADD = add and SUB = subtract
+                    if (funct7 == 0b0000000) { //ADD
+                        reg[rd] = reg[rs1] + reg[rs2];
+                    } else if (funct7 == 0b0100000) { // SUB
+                        reg[rd] = reg[rs1] - reg[rs2];
                     } else {
                         printf("Funct7 %d not yet implemented", funct7);
                     }
                     break;
-                case 001: //SLL = shift left logical
-                    rd = rs1 << rs2;
+                case 0b001: //SLL = shift left logical
+                    reg[rd] = reg[rs1] << reg[rs2];
                     break;
-                case 010: //SLT = set less than
-                    rd = rs1 < rs2;
+                case 0b010: //SLT = set less than
+                    reg[rd] = reg[rs1] < reg[rs2];
                     break;
-                case 011: //SLTU = set less than unsigned
-                    rd = rs1 < rs2;
+                case 0b011: //SLTU = set less than unsigned
+                    reg[rd] = reg[rs1] < reg[rs2];
                     break;
-                case 100: //XOR = exclusive or
-                    rd = rs1 ^ rs2;
+                case 0b100: //XOR = exclusive or
+                    reg[rd] = reg[rs1] ^ reg[rs2];
                     break;
-                case 101: //SRL = shift right logical miising slra
-                    rd = rs1 >> rs2;
+                case 0b101: //SRL = shift right logical miising slra
+                    reg[rd] = reg[rs1] >> reg[rs2];
                     break;
-                case 110: //OR = or
-                    rd = rs1 | rs2;
+                case 0b110: //OR = or
+                    reg[rd] = reg[rs1] | reg[rs2];
                     break;
-                case 111: //AND = and
-                    rd = rs1 & rs2;
+                case 0b111: //AND = and
+                    reg[rd] = reg[rs1] & reg[rs2];
                     break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
