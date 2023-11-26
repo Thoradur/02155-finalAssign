@@ -16,14 +16,6 @@
 #define testfile "test/task1/addlarge.bin"
 
 
-// static program test
-static int progr[] = {
-        // As minimal RISC-V assembler example
-        0x00200093, // addi x1 x0 2
-        0x00300113, // addi x2 x0 3
-        0x002081b3, // add x3 x1 x2
-};
-
 // in
 int temp (int instr, uint32_t reg[32], uint32_t *memory);
 void readBinFile(uint32_t *memory);
