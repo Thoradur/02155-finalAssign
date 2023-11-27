@@ -291,35 +291,48 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
             funct3 = (instr >> 12) & 0x07;
             rs1 = (instr >> 15) & 0x01f;
             rs2 = (instr >> 20) & 0x01f;
+            if (instr < 0){imm = ~(0x1fff ^ imm);}
             switch (funct3) {
                 case 0b000: //BEQ = branch equal
                     if(reg[rs1] == reg[rs2]){
                         pc = pc + imm;
+                    } else {
+                        pc += 4;
                     }
                     break;
                 case 0b001: //BNE = branch not equal
                     if(reg[rs1] != reg[rs2]){
                         pc = pc + imm;
+                    } else {
+                        pc += 4;
                     }
                     break;
                 case 0b100: //BLT = branch less than
                     if(reg[rs1] < reg[rs2]){
                         pc = pc + imm;
+                    } else {
+                        pc += 4;
                     }
                     break;
                 case 0b101: //BGE = branch greater than or equal
                     if(reg[rs1] >= reg[rs2]){
                         pc = pc + imm;
+                    } else {
+                        pc += 4;
                     }
                     break;
                 case 0b110: //BLTU = branch less than unsigned
                     if(reg[rs1] < reg[rs2]){
                         pc = pc + imm;
+                    } else {
+                        pc += 4;
                     }
                     break;
                 case 0b111: //BGEU = branch greater than or equal unsigned
                     if(reg[rs1] >= reg[rs2]){
                         pc = pc + imm;
+                    } else {
+                        pc += 4;
                     }
                     break;
                 default:
