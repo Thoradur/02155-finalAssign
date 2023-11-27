@@ -13,7 +13,7 @@
 #include <stdint.h>
 #endif
 
-#define testfile "test/task4/t7"
+#define testfile "test/task4/t8"
 
 
 // static program test
@@ -27,7 +27,7 @@ static int progr[] = {
 // in
 int temp (int instr, uint32_t reg[32], uint32_t *memory);
 void readBinFile(uint32_t *memory);
-void readResFile();
+void readResFile(uint32_t reg[32]);
 
 
 //GLOBAL VAL
@@ -75,7 +75,7 @@ int main() {
 
 
     printf("END of RISC-V Simiulator\n");
-    readResFile();
+    readResFile(reg);
 
     return 0;
 }
@@ -427,17 +427,17 @@ void readBinFile(uint32_t *memory){
 
 }
 
-void readResFile(){
+void readResFile(uint32_t reg[32]){
     char str[] = testfile".res";
     FILE *file = fopen(str, "rb");  // Open the file in binary mode
+    int count = 0;
 
     if (file == NULL) {
         perror("Error opening file");
     }
     printf("File found %s printing result \n",str);
     for (int j = 0; j < 8; ++j){
-        // Read the first 4 bytes
-
+        // Read the first 16 bytes so first 4 registers
         uint8_t bytes[16];
         fread(bytes, sizeof(uint8_t), 16, file);
         // Assuming little-endian, convert bytes to a 32-bit integer
@@ -450,8 +450,26 @@ void readResFile(){
         printf("x%02d = 0x%08x, x%02d = 0x%08x, x%02d = 0x%08x, x%02d = 0x%08x \n",0+(j*4),val1,1+(j*4),val2,2+(j*4),val3,3+(j*4),val4);
 
 
-    }
+        //CHECKS IF THE REGISTERS ARE EQUAL TO THE RESULT FILE
+        if (reg[0+(j*4)]==val1){
+            count++;
+        }if (reg[1+(j*4)]==val2){
+            count++;
+        }if (reg[2+(j*4)]==val3){
+            count++;
+        }if (reg[3+(j*4)]==val4){
+            count++;
+        }
 
+
+
+
+    }
+    if (count == 32){
+        printf("All 32 registers are equal to the result file\n");
+    } else{
+        printf("there is %d registers wrong\n",(32-count));
+    }
     fclose(file);
 
 }
