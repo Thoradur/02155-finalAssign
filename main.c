@@ -13,7 +13,7 @@
 #include <stdint.h>
 #endif
 
-#define testfile "test/task4/t12"
+#define testfile "test/task4/t11"
 
 
 // static program test
@@ -116,8 +116,9 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
                     reg[rd] = memory[reg[rs1]+imm];
                     break;
                 case 0b001: //LH = load halfword
-                    reg[rd] = memory[reg[rs1]+imm] & 0x0ff;
-                    reg[rd] += (memory[(reg[rs1] + imm) + 1]) << 8;
+                    reg[rd] = (memory[(reg[rs1]+imm+1)]<<8|memory[(reg[rs1]+imm)]);
+//                    reg[rd] = memory[reg[rs1]+imm] & 0x0ff;
+//                    reg[rd] += (memory[(reg[rs1] + imm) + 1]) << 8;
                     break;
                 case 0b010: //LW = load word
                     reg[rd] = (memory[(reg[rs1]+imm+3)]<<24| memory[(reg[rs1]+imm+2)]<<16 |memory[(reg[rs1]+imm+1)]<<8|memory[(reg[rs1]+imm+0)]);
@@ -224,14 +225,14 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
                     break;
                 case 0b001: //SH = store halfword
                         memory[reg[rs1] + imm] = reg[rs2] & 0xff;
-                        memory[reg[rs1] + imm + 1] = reg[rs2] & 0xff00;
+                        memory[reg[rs1] + imm + 1] = (uint32_t) ((reg[rs2] >> (1 * 8)) & 0xff);
                     break;
                 case 0b010: //SW = store word
 
                     memory[reg[rs1] + imm] = reg[rs2] & 0xff;
-                    memory[reg[rs1] + imm + 1] = (reg[rs2]<<8) & 0xff;
-                    memory[reg[rs1] + imm + 2] = (reg[rs2]<<16) & 0xff;
-                    memory[reg[rs1] + imm + 3] = (reg[rs2]<<24) & 0xff;
+                    memory[reg[rs1] + imm + 1] = (uint32_t) ((reg[rs2] >> (1 * 8)) & 0xff);
+                    memory[reg[rs1] + imm + 2] = (reg[rs2] >> 16) & 0xff;
+                    memory[reg[rs1] + imm + 3] = (reg[rs2] >> 24) & 0xff;
                     break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
@@ -376,8 +377,8 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
             imm = (instr >> 20);
             switch (funct3) {
                 case 0b000: //JALR = jump and link register
-                    reg[rd] = pc+4;
-                    pc = reg[rs1] +imm;
+                    if (rd != 0) reg[rd] = pc + 4;
+                    pc = (int) reg[rs1] + (int) imm;
                     break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
@@ -390,8 +391,16 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
         case 0b1101111: //FMT = UJ //JAL
             rd = (instr >> 7) & 0x01f;
             imm = (((instr >> 31) & 0x01) <<20 )| (((instr >> 12) & 0xff) << 12)|(((instr >> 20) & 0x01) << 11)|(((instr >> 21) & 0x03ff)<<1);
-            reg[rd] = pc+4;
-            pc = (pc + imm) & 0b111111110;
+            if (rd != 0) reg[rd] = pc+4;
+            //pc = (pc + imm) & 0b111111110;
+            int imm = (instr >> 12);
+
+            int offset = (((imm & 0x80000) |
+            ((imm & 0x7fe00) >> 9) |
+            ((imm & 0x100) << 2) |
+            ((imm & 0xff) << 11)) << 12) >> 11;
+            pc += offset;
+            //pc += imm;
             break;
 
 
