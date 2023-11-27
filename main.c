@@ -13,20 +13,21 @@
 #include <stdint.h>
 #endif
 
-#define testfile "test/task4/t4.bin"
+#define testfile "test/task4/t7"
 
 
 // static program test
 static int progr[] = {
-        // As minimal RISC-V assembler example
-        0x00200093, // addi x1 x0 2
-        0x00300113, // addi x2 x0 3
-        0x002081b3, // add x3 x1 x2
+        // As minimal RISC-V assembler example used for testing
+        0xfec00513, // addi x10 x0 -20
+        0xffd50593, // addi x11 x10 3
+        0x00b50633, // add x12 x10 x11
 };
 
 // in
 int temp (int instr, uint32_t reg[32], uint32_t *memory);
 void readBinFile(uint32_t *memory);
+void readResFile();
 
 
 //GLOBAL VAL
@@ -39,6 +40,7 @@ int main() {
     //size_t size_in_bytes = 1024 * 1024;
 
     //memory = malloc(size_in_bytes);
+
     uint32_t *memory = malloc(0xFFFFF * sizeof(uint32_t));
     uint32_t reg[32] ={0};
 
@@ -53,16 +55,19 @@ int main() {
     while(1){
 
         i = temp(memory[pc], reg, memory);
+
+
+//        temp(progr[0], reg, memory);
+//        temp(progr[1], reg, memory);
+//        temp(progr[2], reg, memory);
+//        i = 0;
         if (i == 0){
             break;
         }
 
-//        temp(progr[0], reg);
-//        temp(progr[1], reg);
-//        temp(progr[2], reg);
-
 
     }
+
 
     printf("x0  = 0x%08x,  x1 = 0x%08x,  x2 = 0x%08x,  x3 = 0x%08x \n",reg[0],reg[1],reg[2],reg[3]);
     printf("x4  = 0x%08x,  x5 = 0x%08x,  x6 = 0x%08x,  x7 = 0x%08x \n",reg[4],reg[5],reg[6],reg[7]);
@@ -77,6 +82,8 @@ int main() {
 
 
     printf("END of RISC-V Simiulator\n");
+    readResFile();
+
     return 0;
 }
 
@@ -145,12 +152,12 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
             funct3 = (instr >> 12) & 0x07;
             rs1 = (instr >> 15) & 0x01f;
             imm = (instr >> 20);
+            regR1 = reg[rs1]; //USED FOR SIGNED OPERATIONS
             switch (funct3) {
                 case 0b000: //ADDI = add immediate
                     reg[rd] = reg[rs1] + imm;
                     break;
                 case 0b010: //SLTI = set less than immediate
-                    regR1 = reg[rs1];
                     reg[rd] = regR1  < imm;
                     break;
                 case 0b011: //SLTIU = set less than immediate unsigned
@@ -403,7 +410,7 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
 
 
 void readBinFile(uint32_t *memory){
-    char str[] = testfile;
+    char str[] = testfile".bin";
     FILE *fp = fopen(str,"r");
     if (fp == NULL){
         perror("Unable to find file");
@@ -424,5 +431,31 @@ void readBinFile(uint32_t *memory){
         word = getw(fp);
     }
     fclose(fp);
+
+}
+
+void readResFile(){
+    char str[] = testfile".res";
+    char c;
+    FILE *fptr = fopen(str,"r");
+    if (fptr == NULL){
+        perror("Unable to find file");
+        exit(1);
+    }
+    printf("File found %s\n",str);
+
+    fseek(fptr,0,SEEK_END);
+    int size = ftell(fptr);
+    fseek(fptr,0,SEEK_SET);
+
+    // Read contents from file
+    c = fgetc(fptr);
+    while (c != EOF)
+    {
+        printf ("test%c", c);
+        c = fgetc(fptr);
+    }
+
+    fclose(fptr);
 
 }
