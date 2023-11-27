@@ -13,7 +13,7 @@
 #include <stdint.h>
 #endif
 
-#define testfile "C:\\Users\\pouls\\CLionProjects\\02155-finalAssign\\test\\task4\\t1"
+#define testfile "test/task4/t12"
 
 
 // static program test
@@ -60,7 +60,7 @@ int main() {
 //        temp(progr[0], reg, memory);
 //        temp(progr[1], reg, memory);
 //        temp(progr[2], reg, memory);
-//        i = 0;
+        //i = 0;
         if (i == 0){
             break;
         }
@@ -115,10 +115,11 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
                     reg[rd] += (memory[(reg[rs1] + imm) + 1]) << 8;
                     break;
                 case 0b010: //LW = load word
-                    reg[rd] = memory[reg[rs1]+imm] & 0x0ff;
-                    reg[rd] += (memory[(reg[rs1] + imm) + 1]) << 8;
-                    reg[rd] += (memory[(reg[rs1] + imm) + 2]) << 16;
-                    reg[rd] += (memory[(reg[rs1] + imm) + 3]) << 24;
+                    reg[rd] = (memory[reg[rs1]+imm+3]<<24| memory[reg[rs1]+imm+2]<<16 |memory[reg[rs1]+imm+1]<<8|memory[reg[rs1]+imm+0]);
+//                    reg[rd] = memory[reg[rs1]+imm] & 0x0ff;
+//                    reg[rd] += (memory[(reg[rs1] + imm) + 1]) << 8;
+//                    reg[rd] += (memory[(reg[rs1] + imm) + 2]) << 16;
+//                    reg[rd] += (memory[(reg[rs1] + imm) + 3]) << 24;
                     break;
                 case 0b100: //LBU = load byte unsigned
                     reg[rd] = memory[reg[rs1] + imm] & 0xff;
@@ -208,6 +209,8 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
             funct3 = (instr >> 12) & 0x07;
             rs1 = (instr >> 15) & 0x01f;
             rs2 = (instr >> 20) & 0x01f;
+            regR1 = reg[rs1];
+            if (instr < 0){imm = ~(0xfff ^ imm);}
             switch (funct3) {
                 case 0b000: //SB = store byte
                         memory[reg[rs1] + imm] = reg[rs2] & 0xff;
@@ -218,9 +221,9 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
                     break;
                 case 0b010: //SW = store word
                     memory[reg[rs1] + imm] = reg[rs2] & 0xff;
-                    memory[reg[rs1] + imm + 1] = reg[rs2] & 0xff00;
-                    memory[reg[rs1] + imm + 2] = reg[rs2] & 0xff0000;
-                    memory[reg[rs1] + imm + 3] = reg[rs2] & 0xff000000;
+                    memory[reg[rs1] + imm + 1] = (reg[rs2]<<8) & 0xff;
+                    memory[reg[rs1] + imm + 2] = (reg[rs2]<<16) & 0xff;
+                    memory[reg[rs1] + imm + 3] = (reg[rs2]<<24) & 0xff;
                     break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
