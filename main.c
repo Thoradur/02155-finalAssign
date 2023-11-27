@@ -13,7 +13,7 @@
 #include <stdint.h>
 #endif
 
-#define testfile "test/task4/t1"
+#define testfile "C:\\Users\\pouls\\CLionProjects\\02155-finalAssign\\test\\task4\\t1"
 
 
 // static program test
@@ -210,17 +210,17 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
             rs2 = (instr >> 20) & 0x01f;
             switch (funct3) {
                 case 0b000: //SB = store byte
-                        memory[rs1 + imm] = rs2 & 0x7f;
+                        memory[reg[rs1] + imm] = reg[rs2] & 0xff;
                     break;
                 case 0b001: //SH = store halfword
-                        memory[rs1 + imm] = rs2 & 0x7f;
-                        memory[rs1 + imm + 1] = rs2 & 0x7f00;
+                        memory[reg[rs1] + imm] = reg[rs2] & 0xff;
+                        memory[reg[rs1] + imm + 1] = reg[rs2] & 0xff00;
                     break;
                 case 0b010: //SW = store word
-                    memory[rs1 + imm] = rs2 & 0x7f;
-                    memory[rs1 + imm + 1] = rs2 & 0x7f00;
-                    memory[rs1 + imm + 2] = rs2 & 0x7f0000;
-                    memory[rs1 + imm + 3] = rs2 & 0x7f000000;
+                    memory[reg[rs1] + imm] = reg[rs2] & 0xff;
+                    memory[reg[rs1] + imm + 1] = reg[rs2] & 0xff00;
+                    memory[reg[rs1] + imm + 2] = reg[rs2] & 0xff0000;
+                    memory[reg[rs1] + imm + 3] = reg[rs2] & 0xff000000;
                     break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
