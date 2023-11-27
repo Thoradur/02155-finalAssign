@@ -13,7 +13,7 @@
 #include <stdint.h>
 #endif
 
-#define testfile "test/task2/branchtrap.bin"
+#define testfile "test/task4/t4.bin"
 
 
 // static program test
@@ -94,6 +94,8 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
     int rs1;
     int rs2;
     int funct7;
+    int regR1;
+    int regR2;
     switch (opcode) {
 
 
@@ -148,7 +150,8 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
                     reg[rd] = reg[rs1] + imm;
                     break;
                 case 0b010: //SLTI = set less than immediate
-                    reg[rd] = reg[rs1] < imm;
+                    regR1 = reg[rs1];
+                    reg[rd] = regR1  < imm;
                     break;
                 case 0b011: //SLTIU = set less than immediate unsigned
                     reg[rd] = reg[rs1] < imm;
@@ -291,8 +294,8 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
             funct3 = (instr >> 12) & 0x07;
             rs1 = (instr >> 15) & 0x01f;
             rs2 = (instr >> 20) & 0x01f;
-            int regR1 = reg[rs1];
-            int regR2 = reg[rs2];
+            regR1 = reg[rs1];
+            regR2 = reg[rs2];
             if (instr < 0){imm = ~(0x1fff ^ imm);}
             switch (funct3) {
                 case 0b000: //BEQ = branch equal
