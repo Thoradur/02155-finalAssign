@@ -13,7 +13,7 @@
 #include <stdint.h>
 #endif
 
-#define testfile "test/task4/t13"
+#define testfile "test/task4/t1"
 
 
 // static program test
@@ -54,7 +54,7 @@ int main() {
     int i = 1;
     while(1){
 
-        i = temp(memory[pc], reg, memory);
+        i = temp(((memory[pc+3]<<24)|(memory[pc+2]<<16)|(memory[pc+1]<<8)|(memory[pc])), reg, memory);
 
 
 //        temp(progr[0], reg, memory);
@@ -419,8 +419,15 @@ void readBinFile(uint32_t *memory){ //Used https://www.geeksforgeeks.org/c-progr
     int i = 0;
     while (word != EOF){
         //printf("%d\n",word);
-        memory[i] = word;
-        i += 4;
+        memory[i++] = word & 0xff;
+//        printf("memory[%d] = 0x%02x ,  %08x\n",i-1,memory[i-1],word); //temp
+        memory[i++] = (word >> 8) & 0xff;
+//        printf("memory[%d] = 0x%02x ,  %08x\n",i-1,memory[i-1],word); //temp
+        memory[i++] = (word >> 16) & 0xff;
+//        printf("memory[%d] = 0x%02x ,  %08x\n",i-1,memory[i-1],word); //temp
+        memory[i++] = (word >> 24) & 0xff;
+//        printf("memory[%d] = 0x%02x ,  %08x\n",i-1,memory[i-1],word); //temp
+
         word = getw(fp);
     }
     fclose(fp);
