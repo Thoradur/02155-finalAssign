@@ -55,18 +55,23 @@ int main() {
     while(1){
 
         i = temp(((memory[pc+3]<<24)|(memory[pc+2]<<16)|(memory[pc+1]<<8)|(memory[pc])), reg, memory);
+        reg[0]= 0;
 
 
 //        temp(progr[0], reg, memory);
 //        temp(progr[1], reg, memory);
 //        temp(progr[2], reg, memory);
-        //i = 0;
+//        i = 0;
         if (i == 0){
             break;
         }
 
 
     }
+
+    FILE *f = fopen("main.res", "wb");
+    fwrite(reg, 4, 32, f);
+    fclose(f);
 
     for (int j = 0; j < 8; ++j) {
 
@@ -115,7 +120,7 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
                     reg[rd] += (memory[(reg[rs1] + imm) + 1]) << 8;
                     break;
                 case 0b010: //LW = load word
-                    reg[rd] = (memory[reg[rs1]+imm+3]<<24| memory[reg[rs1]+imm+2]<<16 |memory[reg[rs1]+imm+1]<<8|memory[reg[rs1]+imm+0]);
+                    reg[rd] = (memory[(reg[rs1]+imm+3)]<<24| memory[(reg[rs1]+imm+2)]<<16 |memory[(reg[rs1]+imm+1)]<<8|memory[(reg[rs1]+imm+0)]);
 //                    reg[rd] = memory[reg[rs1]+imm] & 0x0ff;
 //                    reg[rd] += (memory[(reg[rs1] + imm) + 1]) << 8;
 //                    reg[rd] += (memory[(reg[rs1] + imm) + 2]) << 16;
@@ -210,6 +215,7 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
             rs1 = (instr >> 15) & 0x01f;
             rs2 = (instr >> 20) & 0x01f;
             regR1 = reg[rs1];
+            int test;
             if (instr < 0){imm = ~(0xfff ^ imm);}
             switch (funct3) {
                 case 0b000: //SB = store byte
@@ -220,10 +226,11 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
                         memory[reg[rs1] + imm + 1] = reg[rs2] & 0xff00;
                     break;
                 case 0b010: //SW = store word
-                    memory[reg[rs1] + imm] = reg[rs2] & 0xff;
-                    memory[reg[rs1] + imm + 1] = (reg[rs2]<<8) & 0xff;
-                    memory[reg[rs1] + imm + 2] = (reg[rs2]<<16) & 0xff;
-                    memory[reg[rs1] + imm + 3] = (reg[rs2]<<24) & 0xff;
+                    test = (reg[rs1] + imm);
+                    memory[test] = reg[rs2] & 0xff;
+                    memory[(reg[rs1] + imm + 1)] = (reg[rs2]<<8) & 0xff;
+                    memory[(reg[rs1] + imm + 2)] = (reg[rs2]<<16) & 0xff;
+                    memory[(reg[rs1] + imm + 3)] = (reg[rs2]<<24) & 0xff;
                     break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
