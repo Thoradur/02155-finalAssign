@@ -13,7 +13,7 @@
 #include <stdint.h>
 #endif
 
-#define testfile "test/task4/t11"
+#define testfile "C:\\Users\\pouls\\CLionProjects\\02155-finalAssign\\test\\task4\\t11"
 
 
 // static program test
@@ -114,11 +114,15 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
             switch (funct3) {
                 case 0b000: //LB = load byte
                     reg[rd] = memory[reg[rs1]+imm];
+                    if((reg[rd] >> 7) == 0b1)
+                    {reg[rd] = ~(reg[rd]) ^ 0xff;}
                     break;
                 case 0b001: //LH = load halfword
                     reg[rd] = (memory[(reg[rs1]+imm+1)]<<8|memory[(reg[rs1]+imm)]);
 //                    reg[rd] = memory[reg[rs1]+imm] & 0x0ff;
 //                    reg[rd] += (memory[(reg[rs1] + imm) + 1]) << 8;
+                    if((reg[rd] >> 15) == 0b1)
+                    {reg[rd] = ~(reg[rd]) ^ 0xffff;}
                     break;
                 case 0b010: //LW = load word
                     reg[rd] = (memory[(reg[rs1]+imm+3)]<<24| memory[(reg[rs1]+imm+2)]<<16 |memory[(reg[rs1]+imm+1)]<<8|memory[(reg[rs1]+imm+0)]);
@@ -126,9 +130,12 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
 //                    reg[rd] += (memory[(reg[rs1] + imm) + 1]) << 8;
 //                    reg[rd] += (memory[(reg[rs1] + imm) + 2]) << 16;
 //                    reg[rd] += (memory[(reg[rs1] + imm) + 3]) << 24;
+                    if((reg[rd] >> 31) == 0b1)
+                    {reg[rd] = ~(reg[rd]) ^ 0xffffffff;}
                     break;
                 case 0b100: //LBU = load byte unsigned
                     reg[rd] = memory[reg[rs1] + imm] & 0xff;
+                    printf("%d", reg[rd]);
                     break;
                 case 0b101: //LHU = load halfword unsigned
                     reg[rd] = memory[reg[rs1]+imm] & 0x0ff;
