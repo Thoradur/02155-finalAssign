@@ -68,17 +68,10 @@ int main() {
 
     }
 
+    for (int j = 0; j < 8; ++j) {
 
-    printf("x0  = 0x%08x,  x1 = 0x%08x,  x2 = 0x%08x,  x3 = 0x%08x \n",reg[0],reg[1],reg[2],reg[3]);
-    printf("x4  = 0x%08x,  x5 = 0x%08x,  x6 = 0x%08x,  x7 = 0x%08x \n",reg[4],reg[5],reg[6],reg[7]);
-    printf("x8  = 0x%08x,  x9 = 0x%08x, x10 = 0x%08x, x11 = 0x%08x \n",reg[8],reg[9],reg[10],reg[11]);
-    printf("x12 = 0x%08x, x13 = 0x%08x, x14 = 0x%08x, x15 = 0x%08x \n",reg[12],reg[13],reg[14],reg[15]);
-    printf("x16 = 0x%08x, x17 = 0x%08x, x18 = 0x%08x, x19 = 0x%08x \n",reg[16],reg[17],reg[18],reg[19]);
-    printf("x20 = 0x%08x, x21 = 0x%08x, x22 = 0x%08x, x23 = 0x%08x \n",reg[20],reg[21],reg[22],reg[23]);
-    printf("x24 = 0x%08x, x25 = 0x%08x, x26 = 0x%08x, x27 = 0x%08x \n",reg[24],reg[25],reg[26],reg[27]);
-    printf("x28 = 0x%08x, x29 = 0x%08x, x30 = 0x%08x, x31 = 0x%08x \n",reg[28],reg[29],reg[30],reg[31]);
-
-
+        printf("x%02d = 0x%08x, x%02d = 0x%08x, x%02d = 0x%08x, x%02d = 0x%08x \n",0+(j*4),reg[0+(j*4)],1+(j*4),reg[1+(j*4)],2+(j*4),reg[2+(j*4)],3+(j*4),reg[3+(j*4)]);
+    }
 
 
     printf("END of RISC-V Simiulator\n");
@@ -436,26 +429,29 @@ void readBinFile(uint32_t *memory){
 
 void readResFile(){
     char str[] = testfile".res";
-    char c;
-    FILE *fptr = fopen(str,"r");
-    if (fptr == NULL){
-        perror("Unable to find file");
-        exit(1);
+    FILE *file = fopen(str, "rb");  // Open the file in binary mode
+
+    if (file == NULL) {
+        perror("Error opening file");
     }
-    printf("File found %s\n",str);
+    printf("File found %s printing result \n",str);
+    for (int j = 0; j < 8; ++j){
+        // Read the first 4 bytes
 
-    fseek(fptr,0,SEEK_END);
-    int size = ftell(fptr);
-    fseek(fptr,0,SEEK_SET);
+        uint8_t bytes[16];
+        fread(bytes, sizeof(uint8_t), 16, file);
+        // Assuming little-endian, convert bytes to a 32-bit integer
+        uint32_t val1 = bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
+        uint32_t val2 = bytes[4] | (bytes[5] << 8) | (bytes[6] << 16) | (bytes[7] << 24);
+        uint32_t val3 = bytes[8] | (bytes[9] << 8) | (bytes[10] << 16) | (bytes[11] << 24);
+        uint32_t val4 = bytes[12] | (bytes[13] << 8) | (bytes[14] << 16) | (bytes[15] << 24);
 
-    // Read contents from file
-    c = fgetc(fptr);
-    while (c != EOF)
-    {
-        printf ("test%c", c);
-        c = fgetc(fptr);
+        // Print the value using printf
+        printf("x%02d = 0x%08x, x%02d = 0x%08x, x%02d = 0x%08x, x%02d = 0x%08x \n",0+(j*4),val1,1+(j*4),val2,2+(j*4),val3,3+(j*4),val4);
+
+
     }
 
-    fclose(fptr);
+    fclose(file);
 
 }
