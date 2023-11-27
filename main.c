@@ -13,7 +13,7 @@
 #include <stdint.h>
 #endif
 
-#define testfile "test/task1/shift.bin"
+#define testfile "test/task2/branchmany.bin"
 
 
 // static program test
@@ -207,13 +207,17 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
             rs2 = (instr >> 20) & 0x01f;
             switch (funct3) {
                 case 0b000: //SB = store byte
-                    printf("store byte not implemented missing memory");
+                        memory[rs1 + imm] = rs2 & 0x7f;
                     break;
                 case 0b001: //SH = store halfword
-                    printf("store halfword not implemented missing memory");
+                        memory[rs1 + imm] = rs2 & 0x7f;
+                        memory[rs1 + imm + 1] = rs2 & 0x7f00;
                     break;
                 case 0b010: //SW = store word
-                    printf("store word not implemented missing memory");
+                    memory[rs1 + imm] = rs2 & 0x7f;
+                    memory[rs1 + imm + 1] = rs2 & 0x7f00;
+                    memory[rs1 + imm + 2] = rs2 & 0x7f0000;
+                    memory[rs1 + imm + 3] = rs2 & 0x7f000000;
                     break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
