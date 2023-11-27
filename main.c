@@ -13,7 +13,7 @@
 #include <stdint.h>
 #endif
 
-#define testfile "test/task2/branchmany.bin"
+#define testfile "test/task2/branchtrap.bin"
 
 
 // static program test
@@ -291,31 +291,33 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
             funct3 = (instr >> 12) & 0x07;
             rs1 = (instr >> 15) & 0x01f;
             rs2 = (instr >> 20) & 0x01f;
+            int regR1 = reg[rs1];
+            int regR2 = reg[rs2];
             if (instr < 0){imm = ~(0x1fff ^ imm);}
             switch (funct3) {
                 case 0b000: //BEQ = branch equal
-                    if(reg[rs1] == reg[rs2]){
+                    if(regR1 == regR2){
                         pc = pc + imm;
                     } else {
                         pc += 4;
                     }
                     break;
                 case 0b001: //BNE = branch not equal
-                    if(reg[rs1] != reg[rs2]){
+                    if(regR1 != regR2){
                         pc = pc + imm;
                     } else {
                         pc += 4;
                     }
                     break;
                 case 0b100: //BLT = branch less than
-                    if(reg[rs1] < reg[rs2]){
+                    if(regR1 < (int) regR2){
                         pc = pc + imm;
                     } else {
                         pc += 4;
                     }
                     break;
                 case 0b101: //BGE = branch greater than or equal
-                    if(reg[rs1] >= reg[rs2]){
+                    if(regR1 >= regR2){
                         pc = pc + imm;
                     } else {
                         pc += 4;
