@@ -215,7 +215,8 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
             rs1 = (instr >> 15) & 0x01f;
             rs2 = (instr >> 20) & 0x01f;
             regR1 = reg[rs1];
-            int test;
+
+
             if (instr < 0){imm = ~(0xfff ^ imm);}
             switch (funct3) {
                 case 0b000: //SB = store byte
@@ -226,11 +227,11 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
                         memory[reg[rs1] + imm + 1] = reg[rs2] & 0xff00;
                     break;
                 case 0b010: //SW = store word
-                    test = (reg[rs1] + imm);
-                    memory[test] = reg[rs2] & 0xff;
-                    memory[(reg[rs1] + imm + 1)] = (reg[rs2]<<8) & 0xff;
-                    memory[(reg[rs1] + imm + 2)] = (reg[rs2]<<16) & 0xff;
-                    memory[(reg[rs1] + imm + 3)] = (reg[rs2]<<24) & 0xff;
+
+                    memory[reg[rs1] + imm] = reg[rs2] & 0xff;
+                    memory[reg[rs1] + imm + 1] = (reg[rs2]<<8) & 0xff;
+                    memory[reg[rs1] + imm + 2] = (reg[rs2]<<16) & 0xff;
+                    memory[reg[rs1] + imm + 3] = (reg[rs2]<<24) & 0xff;
                     break;
                 default:
                     printf("Funct3 %d not yet implemented", funct3);
@@ -390,7 +391,7 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
             rd = (instr >> 7) & 0x01f;
             imm = (((instr >> 31) & 0x01) <<20 )| (((instr >> 12) & 0xff) << 12)|(((instr >> 20) & 0x01) << 11)|(((instr >> 21) & 0x03ff)<<1);
             reg[rd] = pc+4;
-            pc = pc + imm;
+            pc = (pc + imm) & 0b111111110;
             break;
 
 
