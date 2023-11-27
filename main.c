@@ -260,8 +260,16 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
                 case 0b100: //XOR = exclusive or
                     reg[rd] = reg[rs1] ^ reg[rs2];
                     break;
-                case 0b101: //SRL = shift right logical miising slra
-                    reg[rd] = reg[rs1] >> reg[rs2];
+                case 0b101: //SRL = shift right logical miising sra
+                    if (funct7 == 0b0000000){
+                        reg[rd] = reg[rs1] >> reg[rs2];
+                    } else if (funct7 == 0b0100000){
+                        int s = -(reg[rs1] >> 31);
+                        reg[rd] = (reg[rs1] >> reg[rs2]) | (s << (32 - reg[rs2]));
+                    } else {
+                        printf("Funct7 %d not yet implemented", funct7);
+                    }
+//                    reg[rd] = reg[rs1] >> reg[rs2];
                     break;
                 case 0b110: //OR = or
                     reg[rd] = reg[rs1] | reg[rs2];
