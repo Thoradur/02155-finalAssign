@@ -13,7 +13,7 @@
 #include <stdint.h>
 #endif
 
-#define testfile "test/task4/t8"
+#define testfile "test/task4/t13"
 
 
 // static program test
@@ -402,7 +402,7 @@ int temp (int instr, uint32_t reg[32], uint32_t *memory){
 }
 
 
-void readBinFile(uint32_t *memory){
+void readBinFile(uint32_t *memory){ //Used https://www.geeksforgeeks.org/c-program-print-contents-file/ as reference
     char str[] = testfile".bin";
     FILE *fp = fopen(str,"r");
     if (fp == NULL){
@@ -427,7 +427,7 @@ void readBinFile(uint32_t *memory){
 
 }
 
-void readResFile(uint32_t reg[32]){
+void readResFile(uint32_t reg[32]){ //Used https://www.geeksforgeeks.org/c-program-print-contents-file/ as reference
     char str[] = testfile".res";
     FILE *file = fopen(str, "rb");  // Open the file in binary mode
     int count = 0;
